@@ -1,5 +1,5 @@
 # Runaway-Trivia
-Simple python text-only game made by pitabread#7689 and Nikita#7430. Designed to accommodate any number of questions.
+Simple python text-only game. Designed to accommodate any number of questions.
 
 Designed and Programmed by: pitabread#7689 and Nikita#7430.\
 Date: June 2020\
