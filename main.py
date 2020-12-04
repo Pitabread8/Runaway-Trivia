@@ -1,428 +1,243 @@
-#main.py has all of the gameplay and class instances.
-
-easyquestionslist_asia = [
-    "Is India in the northern hemisphere, southern hemisphere, or both?",
-    "What is the capital of China?",
-    "What is the capital of Japan?",
-    "What is the main religion in Jordan?",
-    "What is the national language of India?",
-    "What is the main religion in Israel?",
-    "What is the capital of South Korea?"
-]
-easyquestionslist_europe = [
-"What currency is used in France?",
-"What is the capital of Germany?",
-"What is the capital of the United Kingdom?"
-]
-
-mediumquestionslist_asia = [
-    "What currency is used in Indonesia?",
-    "What is the biggest river that flows through China?",
-    "What is the national animal of China?",
-    "What is the currency of Japan?",
-    "What is the national language of Myanmar?"
-]
-mediumquestionslist_europe = [
-    "What is the capital of Italy?",
-    "What is the capital of Scotland?",
-    "How many countries are part of the United Kingdom?"
-]    
-mediumquestionslist_northamerica = [
-    "What is the official language of Belize?",
-    "What is the currency of Mexico?"
-]
-
-hardquestionslist_northamerica = [
-    "What is the currency of the U.S?",
-    "What is the national flower of the United States?"
-]
-hardquestionslist_europe = [
-    "What currency is used by Russia?",
-    "What is the national animal of Scotland?"
-]
-hardquestionslist_asia = [
-    "How many states are in India?", 
-    "How many mountains are in Taiwan?"
-]
-hardquestionslist_southamerica = [
-    "What is the official language of Suriname?",
-    "How many time zones are there in Brazil?"
-]
-hardquestionslist_africa = [
-    "What is the capital of Morocco?",
-    "What is the national language of Ethiopia?"
-]
-
-correctresponselist = [
-    "The police got lost at the airport. Good job!",
-    "It rained heavily last night, and the police got stuck in some mud. Keep going!",
-    "The police lost their tickets and are now stranded at the bus stand. Good job!",
-    "Yay! You managed to lose the police in a busy crowd.",
-    "You managed to hitch a ride on the last boat in the harbor. Good going!",
-    "The police's servers \"accidentally\" shut down. Get as far as you can while they reboot!"
-]
-incorrectresponselist = [
-    "Uh oh! You didn’t cover your tracks well!",
-    "Your plane got rescheduled. The police are getting closer.",
-    "You slipped on a banana peel and got hurt. You have to be more careful!",
-    "Oops, you got distracted by a traveling circus. Look at those funny clowns!",
-    "You decided to go sightseeing. Unfortunately, so did the police.",
-    "Uh oh. Someone saw you and told the police. Better leave soon!"
-]
-
-from logic import Player
-from logic import Logic
 from menu import Menu
-import random
+from logic import Player
+from lists import rules
+from lists import responses
+from lists import credits
+# from dicts import continents
+from dicts import easy
+from dicts import medium
+from dicts import hard
+from dicts import medium_bonus
+from dicts import hard_bonus
 import time
+import random
 
+
+# Prints rules
+def Rules():
+    for i in rules:
+        print(i)
+        time.sleep(2)
+
+
+# Prints credits
 def Credits():
-  print("Thanks for playing!")
-  gamename = "Runaway Trivia"
-  category1 = "Designed and Programmed by:"
-  category2 = "Information:"
-  person1 = "Nikita Sane"
-  person2 = "Sita Vemuri"
-  info1 = "First released: June 2020"
-  info2 = "Made with: Python"
-  print(f"\n{gamename:^50} \n")
-  print(f"{category1:^50}")
-  print(f"{person1:^50}")
-  print(f"{person2:^50} \n")
-  print(f"{category2:^50}")
-  print(f"{info1:^50}")
-  print(f"{info2:^50}")
+    for l in credits:
+        time.sleep(2)
+        print(f"{l:^50}")
 
-continents_easy = ["Asia", "Europe"]
-destinationpicker_easy = Menu(continents_easy)
 
-continents_medium = ["Asia", "Europe", "North America"]
-destinationpicker_medium = Menu(continents_medium)
-
-continents_hard = ["Asia", "Europe", "North America", "South America", "Africa"]
-destinationpicker_hard = Menu(continents_hard)
-
+# Creates player object
 Player = Player(3)
 
-#class instances/list
+# Creates starting menus
 begin = Menu(["Instructions", "Play"])
 difficulty = Menu(["Easy", "Medium", "Hard"])
-
-def responsePicker_correct():
-  n = random.randint(0, len(correctresponselist) - 1)
-  print(correctresponselist[n])
-
-def responsePicker_incorrect():
-  n = random.randint(0, len(incorrectresponselist) - 1)
-  print(incorrectresponselist[n])
-
-#beginning Menu
 print("Welcome to Runaway Trivia!")
 begin.display()
 selection = eval(input("Enter Choice Here: "))
+
+# Prints rules/starts game
 if selection == 0:
-	print(
-	    "-This is a game where you, the criminal, move between different locations around the world while running away from the police.\n-You will begin in a random location. From there,you can choose a continent to go to and answer a question about it. Make sure you know some stuff about that location!\n-If you stay in a continent for too long, you will automatically move to a different one and answer a question about the new continent.\n-You can pick easy, medium, or hard questions to answer.\n-To get farther away from the police you must answer the trivia questions quickly and accurately. \n-You have three lives, and you can lose them by getting a question wrong. If you lose all three, you get a bonus question to revive your three lives. If you answer correctly, keep going. However, if you answer incorrectly, the police will catch you and you lose. Game over.\n-The way to win the game is to make it to the end without dying at all in Easy mode, without dying twice in Medium mode, and without dying thrice in Hard mode. \nGood Luck!"
-	)
-	difficulty.display()
-	challenge = eval(input("Enter Choice Here: "))
-else:
-	print("Pick your difficulty.")
-	difficulty.display()
-	challenge = eval(input("Enter Choice Here: "))
+    Rules()
+print("Pick your difficulty.")
+difficulty.display()
+challenge = eval(input("Enter Choice Here: "))
 
-startTime_easy = time.time()
+# Location list
+continents = {"easy": ["Asia", "Europe"], "medium": ["Asia", "Europe", "North America"],
+              "hard": ["Asia", "Europe", "North America", "South America", "Africa"]
+              }
+
+# Creates menus for choosing destinations
+easy_picker = Menu(continents["easy"])
+medium_picker = Menu(continents["medium"])
+hard_picker = Menu(continents["hard"])
+
+
+# Creates list of question indices to choose from
+def qdict(p1, p2):
+    for c in range(len(p1)):
+        p2[c] = []
+        for q in range(len(list(p1[c].keys()))):
+            p2[c].append(q)
+
+
+# Choose destination
+def destination(p1):
+    print("\nPick your location.")
+    p1.display()
+    place = eval(input("Enter Choice Here: "))
+    return place
+
+
+# Ask question and check answer
+def check(p1, p2, p3, p4):
+    a = input(f"{p1} ").lower()
+    if a != p2[p1].lower():
+        Player.lives -= 1
+        print(random.choice(p3[1]))
+        Player.getInfo()
+    else:
+        print(random.choice(p3[0]))
+    p4.remove(question)
+
+
+# If a location runs out
+def placecheck(p1, p2, p3, p4, p5):
+    if len(p1[p2]) == 0 and len(p3) == 1:
+        p3.remove(p3[p4])
+        del p1[p2]
+
+    elif len(p1[p2]) == 0 and len(p3) > 1:
+        print(f"You stayed in {p5} for too long!")
+        p3.remove(p3[p4])
+        del p1[p2]
+
+
+# If lives run out - bonus question
+def bonusq(p1, p2):
+    bonusq = random.choice(p1)
+    ans = input(f"{bonusq} ").lower()
+
+    if ans == p2[bonusq].lower():
+        Player.lives = 3
+        print("Good Job! Your lives have been restored.")
+        del p2[bonusq]
+        return True
+
+
+def win(p1):
+    endTime = time.time() - startTime
+    print(f"\nYou did it! The police have given up. You took {endTime:.1f} seconds and lost {p1} lives.")
+    Credits()
+
+
+startTime = time.time()
+
 if challenge == 0:
-  print("Pick your location.")
-  destinationpicker_easy.display()
-  place = eval(input("Enter Choice Here: "))
-  location = continents_easy[place]
-  print(f"\nYou are in {location}.")
+    # Creates list of question indices to choose from
+    easyqdict = {}
+    qdict(easy, easyqdict)
 
-  while True:
-    if location == "Asia":
-      question = easyquestionslist_asia[random.randint(0, len(easyquestionslist_asia) - 1)]
-      easyquestionslist_asia.remove(question)   
+    while True:
+        # Choose destination
+        place = destination(easy_picker)
+        location = continents["easy"][place]
+        print(f"\nYou are in {location}.")
 
-      a = input(f"{question} ").lower()
-      q = Logic(a)
-      if q.EasyIsCorrect_asia(question) == False:
-        Player.lives -= 1
-        responsePicker_incorrect()
-        Player.getInfo()
-      else:
-        responsePicker_correct()
+        # Select a question from the keys
+        keylist = list(easyqdict.keys())  # Creates a list of 0 & 1 for each continent
+        key = keylist[place]  # The list of questions in the continent, 0, 1, 2, etc.
+        question = random.choice(easyqdict[key])  # Chooses an item from the questions in the continent
+        qlist = (list(easy[key].keys()))  # Create a list of questions
 
-    if location == "Europe":
-      question = easyquestionslist_europe[random.randint(0, len(easyquestionslist_europe) - 1)]
-      easyquestionslist_europe.remove(question)  
+        # Ask question and check answer
+        check(qlist[question], easy[key], responses, easyqdict[key])
 
-      a = input(f"{question} ").lower()
-      q = Logic(a)
-      if q.EasyIsCorrect_europe(question) == False:
-        Player.lives -= 1
-        responsePicker_incorrect()
-        Player.getInfo()
-      else:
-        responsePicker_correct()
+        # If a location runs out
+        placecheck(easyqdict, key, continents["easy"], place, location)
 
-    #If Asia runs out
-    if len(easyquestionslist_asia) == 0 and "Asia" in continents_easy:
-      print("You stayed in Asia for too long!")
-      continents_easy.remove("Asia")
+        # If lives run out
+        if Player.isAlive() == False:
+            print("\nYou have lost all of your lives. The police caught up with you. Try again!")
+            break
 
-    #If Europe runs out
-    if len(easyquestionslist_europe) == 0 and "Europe" in continents_easy:
-      print("You stayed in Europe for too long!")
-      continents_easy.remove("Europe")
- 
-    #If lives run out
-    if Player.lives == 0:
-      print("\nYou have lost all of your lives. The police caught up with you. Try again!")
-      break
-    
-    #If questions run out
-    if len(continents_easy) == 0:
-      endTime_easy = time.time() - startTime_easy
-      print(f"\nYou did it! The police have given up. It took you {endTime_easy: .1f} seconds to finish.")
-      Credits()
-      break
+        # If questions run out
+        if len(continents["easy"]) == 0:
+            win(3 - (Player.lives))
+            break
 
-    print("\nPick your next location.")
-    destinationpicker_easy.display()
-    place = eval(input("Enter Choice Here: "))
-    location = continents_easy[place]
-    print(f"\nYou are in {location}.")
-
-startTime_medium = time.time()
 if challenge == 1:
-  print("Pick your location.")
-  destinationpicker_medium.display()
-  place = eval(input("Enter Choice Here: "))
-  location = continents_medium[place]
-  print(f"\nYou are in {location}.")
-  
-  counter = 0
+    # Creates list of question indices to choose from
+    mediumqdict = {}
+    qdict(medium, mediumqdict)
 
-  while True:
-    if location == "Asia":
-      question = mediumquestionslist_asia[random.randint(0, len(mediumquestionslist_asia) - 1)]
-      mediumquestionslist_asia.remove(question)    
-      a = input(f"{question} ").lower()
-      q = Logic(a)
-      if q.MediumIsCorrect_asia(question) == False:
-        Player.lives -= 1
-        responsePicker_incorrect()
-        Player.getInfo()
-      else:
-        responsePicker_correct()
+    # Counts deaths (loss of 3 lives)
+    counter = 0
 
-    if location == "Europe":
-      question = mediumquestionslist_europe[random.randint(0, len(mediumquestionslist_europe) - 1)]
-      mediumquestionslist_europe.remove(question)
+    while True:
+        # Choose destination
+        place = destination(medium_picker)
+        location = continents["medium"][place]
+        print(f"\nYou are in {location}.")
 
-      a = input(f"{question} ").lower()
-      q = Logic(a)
-      if q.MediumIsCorrect_europe(question) == False:
-        Player.lives -= 1
-        responsePicker_incorrect()
-        Player.getInfo()
-      else:
-        responsePicker_correct()
+        # Select a question from the keys
+        keylist = list(mediumqdict.keys())  # Creates a list of 0 & 1 for each continent
+        key = keylist[place]  # The list of questions in the continent, 0, 1, 2, etc.
+        question = random.choice(mediumqdict[key])  # Chooses an item from the questions in the continent
+        qlist = (list(medium[key].keys()))  # Create a list of questions
 
-    if location == "North America":
-      question = mediumquestionslist_northamerica[random.randint(0, len(mediumquestionslist_northamerica) - 1)]
-      mediumquestionslist_northamerica.remove(question)
+        # Ask question and check answer
+        check(qlist[question], medium[key], responses, mediumqdict[key])
 
-      a = input(f"{question} ").lower()
-      q = Logic(a)
-      if q.MediumIsCorrect_northamerica(question) == False:
-        Player.lives -= 1
-        responsePicker_incorrect()
-        Player.getInfo()
-      else:
-        responsePicker_correct()
+        # If a location runs out
+        placecheck(mediumqdict, key, continents["medium"], place, location)
 
-    #If Asia runs out
-    if len(mediumquestionslist_asia) == 0 and "Asia" in continents_medium:
-      print("You stayed in Asia for too long!")
-      continents_medium.remove("Asia")
+        # Create bonus question list
+        new_medium_bonus = medium_bonus
 
-    #If Europe runs out
-    if len(mediumquestionslist_europe) == 0 and "Europe" in continents_medium:
-      print("You stayed in Europe for too long!")
-      continents_medium.remove("Europe")
+        # If lives run out - bonus question
+        if not Player.isAlive() and counter == 0:
+            counter += 1
+            print("\nYou have lost all of your lives. You get one revival question.")
+            if not bonusq(list(new_medium_bonus.keys()), new_medium_bonus):
+                print("\nYou have lost all of your lives. The police caught up with you. Try again!")
+                break
 
-    #If North America runs out
-    if len(mediumquestionslist_northamerica) == 0 and "North America" in continents_medium:
-      print("You stayed in North America for too long!")
-      continents_medium.remove("North America")
+        # If lives run out
+        elif Player.isAlive() == False and counter > 0:
+            print("\nYou have lost all of your lives. The police caught up with you. Try again!")
+            break
 
-    #If lives run out 
-    if Player.lives <= 0 and counter == 0:
-      print("\nYou have lost all of your lives. Here is a second chance bonus question (which you only get one of).")
-      counter += 1
-      a = input("Which continent has the second biggest population? ").lower()
-      answer = "Africa"
+        # If questions run out
+        if len(continents["medium"]) == 0:
+            win((3 * counter) + (3 - Player.lives))
+            break
 
-      if a == answer.lower(): 
-        Player.lives = 3
-        print("Good Job! Your lives have been restored. ")
-      else:
-        print("\nYou have lost all of your lives. The police caught up with you. Try again!")
-        break
-    if Player.lives <= 0 and counter > 0:   
-      print("\nYou have lost all of your lives. The police caught up with you. Try again!")
-      break
-
-    #If questions run out
-    if len(mediumquestionslist_asia) == 0 and len(mediumquestionslist_europe) == 0 and len(mediumquestionslist_northamerica) == 0:
-      endTime_medium = time.time() - startTime_medium
-      print(f"\nThe police have given up. You win! It took you {endTime_medium: .1f} seconds to finish.")
-      Credits()
-      break
-
-    print("\nPick your next location.")
-    destinationpicker_medium.display()
-    place = eval(input("Enter Choice Here: "))
-    location = continents_medium[place]
-    print(f"\nYou are in {location}.")  	
-
-startTime_hard = time.time()
 if challenge == 2:
-  print("Pick your location.")
-  destinationpicker_hard.display()
-  place = eval(input("Enter Choice Here: "))
-  location = continents_hard[place]
-  print(f"\nYou are in {location}.")
-  
-  counter = 0
+    # Creates list of question indices to choose from
+    hardqdict = {}
+    qdict(hard, hardqdict)
 
-  while True:
-    if location == "Asia":
-      question = hardquestionslist_asia[random.randint(0, len(hardquestionslist_asia) - 1)]
-      hardquestionslist_asia.remove(question)    
-      a = input(f"{question} ").lower()
-      q = Logic(a)
-      if q.HardIsCorrect_asia(question) == False:
-        Player.lives -= 1
-        responsePicker_incorrect()
-        Player.getInfo()
-      else:
-        responsePicker_correct()
+    # Counts deaths (loss of 3 lives)
+    counter = 0
 
-    if location == "Europe":
-      question = hardquestionslist_europe[random.randint(0, len(hardquestionslist_europe) - 1)]
-      hardquestionslist_europe.remove(question)
+    while True:
+        # Choose destination
+        place = destination(hard_picker)
+        location = continents["hard"][place]
+        print(f"\nYou are in {location}.")
 
-      a = input(f"{question} ").lower()
-      q = Logic(a)
-      if q.HardIsCorrect_europe(question) == False:
-        Player.lives -= 1
-        responsePicker_incorrect()
-        Player.getInfo()
-      else:
-        responsePicker_correct()
+        # Select a question from the keys
+        keylist = list(hardqdict.keys())  # Creates a list of 0 & 1 for each continent
+        key = keylist[place]  # The list of questions in the continent, 0, 1, 2, etc.
+        question = random.choice(hardqdict[key])  # Chooses an item from the questions in the continent
+        qlist = (list(hard[key].keys()))  # Create a list of questions
 
-    if location == "North America":
-      question = hardquestionslist_northamerica[random.randint(0, len(hardquestionslist_northamerica) - 1)]
-      hardquestionslist_northamerica.remove(question)
+        # Ask question and check answer
+        check(qlist[question], hard[key], responses, hardqdict[key])
 
-      a = input(f"{question} ").lower()
-      q = Logic(a)
-      if q.HardIsCorrect_northamerica(question) == False:
-        Player.lives -= 1
-        responsePicker_incorrect()
-        Player.getInfo()
-      else:
-        responsePicker_correct()
+        # If a location runs out
+        placecheck(hardqdict, key, continents["hard"], place, location)
 
-    if location == "South America":
-      question = hardquestionslist_southamerica[random.randint(0, len(hardquestionslist_southamerica) - 1)]
-      hardquestionslist_southamerica.remove(question)
+        # Create bonus question list
+        new_hard_bonus = hard_bonus
 
-      a = input(f"{question} ").lower()
-      q = Logic(a)
-      if q.HardIsCorrect_southamerica(question) == False:
-        Player.lives -= 1
-        responsePicker_incorrect()
-        Player.getInfo()
-      else:
-        responsePicker_correct()
+        # If lives run out - bonus question 1
+        if not Player.isAlive() and counter <= 1:
+            counter += 1
+            print("\nYou have lost all of your lives. Here is a revival question.")
+            if not bonusq(list(new_hard_bonus.keys()), new_hard_bonus):
+                print("\nYou have lost all of your lives. The police caught up with you. Try again!")
+                break
 
-    if location == "Africa":
-      question = hardquestionslist_africa[random.randint(0, len(hardquestionslist_africa) - 1)]
-      hardquestionslist_africa.remove(question)
+        # If lives run out
+        elif Player.isAlive() == False and counter > 1:
+            print("\nYou have lost all of your lives. The police caught up with you. Try again!")
+            break
 
-      a = input(f"{question} ").lower()
-      q = Logic(a)
-      if q.HardIsCorrect_africa(question) == False:
-        Player.lives -= 1
-        responsePicker_incorrect()
-        Player.getInfo()
-      else:
-        responsePicker_correct()
-
-    #If Asia runs out
-    if len(hardquestionslist_asia) == 0 and "Asia" in continents_hard:
-      print("You stayed in Asia for too long!")
-      continents_hard.remove("Asia")
-
-    #If Europe runs out
-    if len(hardquestionslist_europe) == 0 and "Europe" in continents_hard:
-      print("You stayed in Europe for too long!")
-      continents_hard.remove("Europe")
-
-    #If North America runs out
-    if len(hardquestionslist_northamerica) == 0 and "North America" in continents_hard:
-      print("You stayed in North America for too long!")
-      continents_hard.remove("North America")
-      
-    #If South America runs out
-    if len(hardquestionslist_southamerica) == 0 and "South America" in continents_hard:
-      print("You stayed in South America for too long!")
-      continents_hard.remove("South America")
-
-    #If Africa runs out
-    if len(hardquestionslist_africa) == 0 and "Africa" in continents_hard:
-      print("You stayed in Africa for too long!")
-      continents_hard.remove("Africa")
-
-    #If lives run out 
-    if Player.lives <= 0 and counter == 0:
-      print("\nYou have lost all of your lives. Here is your final bonus question.")
-      counter += 1
-      a = input("What is the largest desert in the world? ").lower()
-      answer = "Antarctica"
-
-      if a == answer.lower(): 
-        Player.lives = 3
-        print("Good Job! Your lives have been restored. ")
-    if Player.lives <= 0 and counter == 1:
-      print("\nYou have lost all of your lives. Here is a last bonus question.")
-      a = input("Which has more countries: North America or South America? ").lower()
-      answer = "North America"
-
-      if a == answer.lower(): 
-        Player.lives = 3
-        print("Good Job! Your lives have been restored. ")
-      else:
-        print("\nYou have lost all of your lives. The police caught up with you. Try again!")
-        break
-        
-    if Player.lives <= 0 and counter > 1:  
-      print("\nYou have lost all of your lives. The police caught up with you. Try again!")
-      break
-    
-    #If questions run out
-    if len(continents_hard) == 0:
-      endTime_hard = time.time() - startTime_hard
-      print(f"\nThe police have given up. You win! It took you {endTime_hard: .1f} seconds to finish.")
-      Credits()
-      break
-  
-    print("\nPick your next location.")
-    destinationpicker_hard.display()
-    place = eval(input("Enter Choice Here: "))
-    location = continents_hard[place]
-    print(f"\nYou are in {location}.")  	
+        # If questions run out
+        if len(continents["hard"]) == 0:
+            win((3 * counter) + (3 - Player.lives))
+            break

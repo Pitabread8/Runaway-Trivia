@@ -1,7 +1,3 @@
-#menu.py has the Menu() class, which can be used to show selection menus
-
-import random
-#class
 class Menu():
   def __init__(self, lists):
     self.lists = lists
