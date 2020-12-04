@@ -78,11 +78,16 @@ hard = [
     }
 ]
 
+continents = {
+              "easy": ["Asia", "Europe"], "medium": ["Asia", "Europe", "North America"],
+              "hard": ["Asia", "Europe", "North America", "South America", "Africa"]
+             }
+
 medium_bonus = {
-               "Which continent has the second biggest population?": "Africa"
+                "Which continent has the second biggest population?": "Africa"
                }
 
 hard_bonus = {
-             "What is the largest desert in the world?": "Antarctica",
-             "Which has more countries: North America or South America?": "North America"
+              "What is the largest desert in the world?": "Antarctica",
+              "Which has more countries: North America or South America?": "North America"
              }
