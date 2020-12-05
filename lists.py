@@ -4,9 +4,11 @@ rules = [
         "In order to get further, you must answer a question about your location correctly.",
         "If you answer incorrectly, you will lose a life.",
         "If you lose all three of your lives, you may get a bonus question (depending on difficulty).",
-        "If you lose all lives and bonus questions, you get caught by the police. Game Over.",
-        "Good Luck!"
+        "If you lose all lives and bonus questions, you get caught by the police. Game over.",
+        "Good luck!"
         ]
+
+modes = ["Easy", "Medium", "Hard"]
 
 responses = [
 
@@ -16,7 +18,8 @@ responses = [
         "The police lost their tickets and are now stranded at the bus stand. Good job!",
         "Yay! You managed to lose the police in a busy crowd.",
         "You managed to hitch a ride on the last boat in the harbor. Good going!",
-        "The police's servers \"accidentally\" shut down. Get as far as you can while they reboot!"
+        "The police servers \"accidentally\" shut down. Get as far as you can while they reboot!",
+        "The police passed right past you in your disguise. Stay hidden!"
     ],
     [
         "Uh oh! You didn’t cover your tracks well!",
@@ -24,7 +27,8 @@ responses = [
         "You slipped on a banana peel and got hurt. You have to be more careful!",
         "Oops, you got distracted by a traveling circus. Look at those funny clowns!",
         "You decided to go sightseeing. Unfortunately, so did the police.",
-        "Uh oh. Someone saw you and told the police. Better leave soon!"
+        "Uh oh. Someone saw you and told the police. Better leave soon!",
+        "You got caught in a traffic jam. The police are catching up!"
     ]
 ]
 
