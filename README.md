@@ -1,6 +1,6 @@
 # Runaway-Trivia
 Simple python text-only game. Designed to accommodate any number of questions. 
-Coming updates: Adding countries? 
+  Coming updates: Adding countries? 
 
 Designed and Programmed by: pitabread#7689 and Nikita#7430.  
 Date: June 2020  
